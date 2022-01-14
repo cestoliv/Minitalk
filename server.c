@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 09:18:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/01/12 12:59:51 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/01/14 11:17:24 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,50 +17,49 @@
 #include <signal.h>
 #include "libft/libft.h"
 
-
-
-void sig_usr(int sig)
+void	sig_usr(int sig)
 {
-	static int	bit = 0;
-	static char	c;
-	int			cur_c;
+	static char	c = 0;
+	static int	bit = -1;
+	int			char_size;
 
+	char_size = 8 * sizeof(c) - 1;
+	if (bit < 0)
+	{
+		bit = char_size;
+		if (!c)
+			ft_putstr_fd("  - ST\n", 1);
+		c = 127;
+	}
 	if (sig == SIGUSR1)
-		cur_c = 0;
+		c |= 1 << bit;
 	else if (sig == SIGUSR2)
-		cur_c = 1;
+		c &= ~(1 << bit);
+	if (!bit && c)
+		ft_putchar_fd(c, 1);
+	else if (!bit && !c)
+		ft_putstr_fd("\n  - ET\n", 1);
+	bit--;
+}
 
-	c &= (~(1 << (bit)));
-
-	//c |= cur_c << bit;
-
-	ft_printf("%d", cur_c);
-	/*
-	if (bit == 3)
-		ft_printf("%c ", c);
-		*/
-	//bit++;
+void	init_sig(int sig)
+{
+	struct sigaction susr;
+	
+	susr.sa_handler = sig_usr;
+	susr.sa_flags = SA_RESTART;
+	sigemptyset(&susr.sa_mask);
+	if (sig == SIGUSR1)
+		sigaction(SIGUSR1, &susr, 0);
+	else if (sig == SIGUSR2)
+		sigaction(SIGUSR2, &susr, 0);
 }
 
 int	main(void)
 {
 	pid_t pid = getpid();
 	ft_printf("pid: %d\n", pid);
-
-	struct sigaction susr1;
-	susr1.sa_handler = sig_usr;
-	susr1.sa_flags = SA_RESTART;
-	sigemptyset(&susr1.sa_mask);
-	sigaction(SIGUSR1, &susr1, 0);
-
-	struct sigaction susr2;
-	susr2.sa_handler = sig_usr;
-	susr2.sa_flags = SA_RESTART;
-	sigemptyset(&susr2.sa_mask);
-	sigaction(SIGUSR2, &susr2, 0);
-
-	//signal(SIGUSR1, sig_usr1);
-	//signal(SIGUSR2, sig_usr2);
-
+	init_sig(SIGUSR1);
+	init_sig(SIGUSR2);
 	while (1) {}
 }
