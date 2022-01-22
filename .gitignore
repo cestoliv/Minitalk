@@ -1,4 +1,5 @@
 *.o
 *.swp
+*.out
 server
 client

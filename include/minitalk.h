@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 10:31:50 by ocartier          #+#    #+#             */
-/*   Updated: 2022/01/19 11:30:16 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/01/22 10:37:01 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,6 @@
 # include <stdlib.h>
 # include <signal.h>
 # include "../libft/libft.h"
-/*
-void	send_char(char c, pid_t pid);
-void	send_str(char *str, pid_t pid);
-void	control_bit(int sig, siginfo_t *info, void *context);
-*/
+
 void	init_sig(int sig, void (*handler)(int, siginfo_t *, void *));
 #endif
