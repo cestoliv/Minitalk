@@ -152,3 +152,8 @@ Nulla egestas non odio ut imperdiet. Nullam faucibus magna lectus, semper vulput
 Duis congue ligula est, sed iaculis ex lacinia in. Nullam justo eros, lacinia eget maximus quis, egestas sed ipsum. Fusce vel ullamcorper lectus. Curabitur at diam ut arcu dictum posuere. Maecenas nec turpis vitae dui tristique aliquet eu ac tortor. In a purus ut erat eleifend sagittis. Nam sit amet lacinia tellus. Aliquam cursus rhoncus mauris quis lacinia. Ut vitae pretium augue, quis feugiat odio. Phasellus sodales interdum vestibulum. Sed lectus nunc, cursus et metus id, laoreet efficitur nunc. Quisque sodales sollicitudin quam, fermentum suscipit dui placerat sit amet.
 "; } 2>&1 | tr '\n' ' '
 echo
+
+echo "Test with 1016400 characters"
+printf '    '
+{ time sh test_million.sh $1 ; } 2>&1 | tr '\n' ' '
+echo
