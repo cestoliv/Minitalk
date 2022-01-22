@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 09:18:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/01/22 10:35:26 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/01/22 15:03:11 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@ void	sig_usr(int sig, siginfo_t *info, void *context)
 	static char	c = 0;
 	static int	bit = -1;
 
+	(void)context;
 	if (kill(info->si_pid, 0) < 0)
 	{
-		ft_printf("ERROR : cant send sig");
+		ft_printf("ERROR : cant send sig to pid : %d\n", info->si_pid);
 		exit(EXIT_FAILURE);
 	}
 	if (bit < 0 && !c)

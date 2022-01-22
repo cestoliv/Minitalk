@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 09:24:25 by ocartier          #+#    #+#             */
-/*   Updated: 2022/01/22 10:38:27 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/01/22 15:05:26 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	send_char(char c, pid_t pid)
 	{
 		if (kill(pid, 0) < 0)
 		{
-			ft_printf("ERROR : cant send sig");
+			ft_printf("ERROR : cant send sig to pid : %d\n", pid);
 			exit(EXIT_FAILURE);
 		}
 		g_bit_control = 0;
@@ -52,6 +52,8 @@ void	send_str(char *str, pid_t pid)
 
 void	sig_usr(int sig, siginfo_t *info, void *context)
 {
+	(void)info;
+	(void)context;
 	if (sig == SIGUSR1)
 		g_bit_control = 1;
 	else if (sig == SIGUSR2)
@@ -60,9 +62,22 @@ void	sig_usr(int sig, siginfo_t *info, void *context)
 
 int	main(int argc, char **argv)
 {
+	pid_t	pid;
+
+	if (argc != 3)
+	{
+		ft_printf("Usage : ./client <pid> <string to send>\n");
+		exit(EXIT_FAILURE);
+	}
 	init_sig(SIGUSR1, &sig_usr);
 	init_sig(SIGUSR2, &sig_usr);
-	send_str(argv[2], ft_atoi(argv[1]));
+	pid = ft_atoi(argv[1]);
+	if (!pid)
+	{
+		ft_printf("%s is an invalid pid\n", argv[1]);
+		exit(EXIT_FAILURE);
+	}
+	send_str(argv[2], pid);
 	while (1)
 		sleep(1);
 }
