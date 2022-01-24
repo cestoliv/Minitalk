@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 09:24:25 by ocartier          #+#    #+#             */
-/*   Updated: 2022/01/22 15:05:26 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/01/24 16:20:35 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,40 +14,58 @@
 
 int	g_bit_control;
 
-void	send_char(char c, pid_t pid)
+int	send_char(char p_c, pid_t p_pid)
 {
-	int	bit;
+	static int		bit = -1;
+	static char		c;
+	static pid_t	pid;
 
-	bit = __CHAR_BIT__ * sizeof(c) - 1;
-	while (bit >= 0)
+	if (p_pid)
 	{
-		if (kill(pid, 0) < 0)
-		{
-			ft_printf("ERROR : cant send sig to pid : %d\n", pid);
-			exit(EXIT_FAILURE);
-		}
-		g_bit_control = 0;
-		if (c & (1 << bit))
-			kill(pid, SIGUSR1);
-		else
-			kill(pid, SIGUSR2);
-		bit--;
-		while (g_bit_control != 1)
-			usleep(10);
+		c = p_c;
+		pid = p_pid;
 	}
+	if (bit < 0)
+		bit = __CHAR_BIT__ * sizeof(c) - 1;
+	if (kill(pid, 0) < 0)
+	{
+		ft_printf("ERROR : cant send sig to pid : %d\n", pid);
+		exit(EXIT_FAILURE);
+	}
+	if (c & (1 << bit))
+		kill(pid, SIGUSR1);
+	else
+		kill(pid, SIGUSR2);
+	bit--;
+	return (bit);
 }
 
-void	send_str(char *str, pid_t pid)
+void	send_str(char *p_str, pid_t p_pid)
 {
-	int	cur;
+	static int		cur = 0;
+	static char		*str;
+	static pid_t	pid;
+	static int		bit = -1;
 
-	cur = 0;
-	while (str[cur])
+	if (p_pid)
 	{
-		send_char(str[cur], pid);
-		cur++;
+		str = p_str;
+		pid = p_pid;
 	}
-	send_char(0, pid);
+	if (bit < 0)
+	{
+		if (str[cur])
+		{
+			bit = send_char(str[cur], pid);
+			cur++;
+		}
+		else
+			bit = send_char(0, pid);
+	}
+	else
+	{
+		bit = send_char(0, 0);
+	}
 }
 
 void	sig_usr(int sig, siginfo_t *info, void *context)
@@ -55,7 +73,8 @@ void	sig_usr(int sig, siginfo_t *info, void *context)
 	(void)info;
 	(void)context;
 	if (sig == SIGUSR1)
-		g_bit_control = 1;
+		send_str("", 0);
+	//g_bit_control = 1;
 	else if (sig == SIGUSR2)
 		exit(EXIT_SUCCESS);
 }
