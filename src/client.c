@@ -6,13 +6,15 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 09:24:25 by ocartier          #+#    #+#             */
-/*   Updated: 2022/01/24 16:20:35 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/01/25 10:37:13 by ocartier         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
 
 int	g_bit_control;
+
+void	sig_usr(int sig);
 
 int	send_char(char p_c, pid_t p_pid)
 {
@@ -68,10 +70,8 @@ void	send_str(char *p_str, pid_t p_pid)
 	}
 }
 
-void	sig_usr(int sig, siginfo_t *info, void *context)
+void	sig_usr(int sig)
 {
-	(void)info;
-	(void)context;
 	if (sig == SIGUSR1)
 		send_str("", 0);
 	//g_bit_control = 1;
@@ -88,8 +88,8 @@ int	main(int argc, char **argv)
 		ft_printf("Usage : ./client <pid> <string to send>\n");
 		exit(EXIT_FAILURE);
 	}
-	init_sig(SIGUSR1, &sig_usr);
-	init_sig(SIGUSR2, &sig_usr);
+	signal(SIGUSR1, &sig_usr);
+	signal(SIGUSR2, &sig_usr);
 	pid = ft_atoi(argv[1]);
 	if (!pid)
 	{
