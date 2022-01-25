@@ -6,15 +6,11 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 09:24:25 by ocartier          #+#    #+#             */
-/*   Updated: 2022/01/25 10:37:13 by ocartier         ###   ########lyon.fr   */
+/*   Updated: 2022/01/25 10:49:16 by ocartier         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
-
-int	g_bit_control;
-
-void	sig_usr(int sig);
 
 int	send_char(char p_c, pid_t p_pid)
 {
@@ -74,7 +70,6 @@ void	sig_usr(int sig)
 {
 	if (sig == SIGUSR1)
 		send_str("", 0);
-	//g_bit_control = 1;
 	else if (sig == SIGUSR2)
 		exit(EXIT_SUCCESS);
 }
