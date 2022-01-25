@@ -3,3 +3,4 @@
 *.out
 server
 client
+.DS_Store
