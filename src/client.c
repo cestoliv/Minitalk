@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 09:24:25 by ocartier          #+#    #+#             */
-/*   Updated: 2022/01/22 15:05:26 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/01/25 10:45:55 by ocartier         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,8 @@ void	send_str(char *str, pid_t pid)
 	send_char(0, pid);
 }
 
-void	sig_usr(int sig, siginfo_t *info, void *context)
+void	sig_usr(int sig)
 {
-	(void)info;
-	(void)context;
 	if (sig == SIGUSR1)
 		g_bit_control = 1;
 	else if (sig == SIGUSR2)
@@ -69,8 +67,8 @@ int	main(int argc, char **argv)
 		ft_printf("Usage : ./client <pid> <string to send>\n");
 		exit(EXIT_FAILURE);
 	}
-	init_sig(SIGUSR1, &sig_usr);
-	init_sig(SIGUSR2, &sig_usr);
+	signal(SIGUSR1, &sig_usr);
+	signal(SIGUSR2, &sig_usr);
 	pid = ft_atoi(argv[1]);
 	if (!pid)
 	{
