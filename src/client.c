@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 09:24:25 by ocartier          #+#    #+#             */
-/*   Updated: 2022/01/25 11:25:48 by ocartier         ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 09:25:36 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,10 @@ void	sig_usr(int sig)
 	if (sig == SIGUSR1)
 		g_bit_control = 1;
 	else if (sig == SIGUSR2)
+	{
+		ft_printf("Message received !\n");
 		exit(EXIT_SUCCESS);
+	}
 }
 
 int	main(int argc, char **argv)

@@ -24,6 +24,7 @@ clean:
 			@make clean -C libft
 
 fclean:		clean
+			rm -rdf client server
 			@make fclean -C libft
 
 .PHONY:		all libft clean fclean
