@@ -1,5 +1,9 @@
 # Minitalk
 
+```
+FINAL GRADE: 125/100
+```
+
 Pass a string of characters from one program to another, using only `kill()` with `SIGUSR1` and `SIGUSR2` (thus passing the data in binary form).
 
 My first work was using usleep, to wait to receive the control bit. It was not working on MacOS (but perfectly on Linux). So I work again to implement the Minitalk whithout using usleep (whithout global variable too). It wasn't working on MacOS...
